@@ -172,40 +172,49 @@ final class BlockchainProcessorImpl implements BlockchainProcessor {
                         defaultNumberOfForkConfirmations : Math.min(1, defaultNumberOfForkConfirmations);
                 connectedPublicPeers = Peers.getPublicPeers(Peer.State.CONNECTED, true);
                 if (connectedPublicPeers.size() <= numberOfForkConfirmations) {
+                    Logger.logMessage("connectedPublicPeers.size() <= numberOfForkConfirmations"); //test
                     return;
                 }
                 peerHasMore = true;
                 final Peer peer = Peers.getWeightedPeer(connectedPublicPeers);
                 if (peer == null) {
+                    Logger.logMessage("peer == null"); //test
                     return;
                 }
                 JSONObject response = peer.send(getCumulativeDifficultyRequest);
                 if (response == null) {
+                    Logger.logMessage("response == null"); //test
                     return;
                 }
                 BigInteger curCumulativeDifficulty = blockchain.getLastBlock().getCumulativeDifficulty();
                 String peerCumulativeDifficulty = (String) response.get("cumulativeDifficulty");
                 if (peerCumulativeDifficulty == null) {
+                    Logger.logMessage("peercumulativedifficulty == null"); //test
                     return;
                 }
                 BigInteger betterCumulativeDifficulty = new BigInteger(peerCumulativeDifficulty);
                 if (betterCumulativeDifficulty.compareTo(curCumulativeDifficulty) < 0) {
+                    Logger.logMessage("betterCumulativeDifficulty.compareTo(curCumulativeDifficulty) < 0"); //test
                     return;
                 }
                 if (response.get("blockchainHeight") != null) {
+                    Logger.logMessage("response.get(\"blockchainHeight\") != null"); //test
                     lastBlockchainFeeder = peer;
                     lastBlockchainFeederHeight = ((Long) response.get("blockchainHeight")).intValue();
                 }
                 if (betterCumulativeDifficulty.equals(curCumulativeDifficulty)) {
+                    Logger.logMessage("betterCumulativeDifficulty.equals(curCumulativeDifficulty)"); //test
                     return;
                 }
 
                 long commonMilestoneBlockId = Genesis.GENESIS_BLOCK_ID;
 
                 if (blockchain.getLastBlock().getId() != Genesis.GENESIS_BLOCK_ID) {
+                    Logger.logMessage("blockchain.getLastBlock().getId() != Genesis.GENESIS_BLOCK_ID"); //test
                     commonMilestoneBlockId = getCommonMilestoneBlockId(peer);
                 }
                 if (commonMilestoneBlockId == 0 || !peerHasMore) {
+                    Logger.logMessage("commonMilestoneBlockId == 0 || !peerHasMore"); //test
                     return;
                 }
 
@@ -239,6 +248,7 @@ final class BlockchainProcessorImpl implements BlockchainProcessor {
                     downloadBlockchain(peer, commonBlock, commonBlock.getHeight());
 
                     if (blockchain.getHeight() - commonBlock.getHeight() <= 10) {
+                        Logger.logMessage("blockchain.getHeight() - commonBlock.getHeight() <= 10");
                         return;
                     }
 
