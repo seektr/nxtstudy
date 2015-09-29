@@ -198,13 +198,14 @@ final class BlockchainProcessorImpl implements BlockchainProcessor {
                     return;
                 }
                 if (response.get("blockchainHeight") != null) {
-                    Logger.logMessage("response.get(\"blockchainHeight\") != null"); //test
+                    Logger.logMessage("response.get(\"blockchainHeight\") != null, blockchain :" + response.get("blockchainHeight")); //test
                     lastBlockchainFeeder = peer;
                     lastBlockchainFeederHeight = ((Long) response.get("blockchainHeight")).intValue();
                 }
                 if (betterCumulativeDifficulty.equals(curCumulativeDifficulty)) {
-                    Logger.logMessage("betterCumulativeDifficulty.equals(curCumulativeDifficulty)"); //test
-                    return;
+                    Logger.logMessage("betterCumulativeDifficulty.equals(curCumulativeDifficulty)" + betterCumulativeDifficulty); //test
+
+                    //return; //test
                 }
 
                 long commonMilestoneBlockId = Genesis.GENESIS_BLOCK_ID;
@@ -221,7 +222,7 @@ final class BlockchainProcessorImpl implements BlockchainProcessor {
                 chainBlockIds = getBlockIdsAfterCommon(peer, commonMilestoneBlockId, false);
                 if (chainBlockIds.size() < 2 || !peerHasMore) {
                     Logger.logMessage("chainBlockIds.size() < 2 || !peerHasMore");
-                    return;
+                    //return; //test
                 }
 
                 final long commonBlockId = chainBlockIds.get(0);
